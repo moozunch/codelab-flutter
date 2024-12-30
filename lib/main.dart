@@ -85,9 +85,12 @@ class MyHomePage extends StatelessWidget {
 
                 ElevatedButton.icon(
                   onPressed: (){
-                    appState.toggleFavorite();
+                    appState.toggleFavorite(); //ngelihat kondisi apakah sudah di like
                     }, 
-                  icon: Icon(MyFlutterApp.heart),
+                  //menggunkana contains karena void tidak bisa return, dan if dengan itenary operator
+                  icon: appState.favorites.contains(appState.current) //apakah di list favorite sudah menyimpan yang current atau maksudnya sudah di like? jika sudah maka iconnya yang heart selain itu empty.
+                      ? Icon(MyFlutterApp.heart)
+                      : Icon(MyFlutterApp.heart_empty),
                   label: Text('Favorite'),
                  ),
               ],
