@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart'; //untuk ambil random english words wordpair
 import 'package:provider/provider.dart';
+import 'my_flutter_app_icons.dart';
 
 void main() {
   runApp(const MyApp()); //menjalankan the app
@@ -36,6 +37,17 @@ class MyAppState extends ChangeNotifier { //class untuk state management atau st
   //MyAppState menjelaskan data yang diperlukan oleh aplikasi ini agar berjalan dengan baik. Saat ini, kode ini hanya berisi variabel tunggal dengan pasangan kata acak saat ini. Anda akan menambahkannya nanti.
   // Class status memperluas ChangeNotifier, yang artinya kode ini dapat memberi tahu kode lain tentang perubahannya sendiri. Misalnya, jika pasangan kata saat ini berubah, beberapa widget dalam aplikasi perlu mengetahuinya.
   // Status dibuat dan disediakan untuk seluruh aplikasi menggunakan ChangeNotifierProvider (lihat kode di atas pada MyApp). Hal ini memungkinkan widget mana pun pada aplikasi untuk mendapatkan status.
+
+  var favorites = <WordPair>[]; //buat list kosong untuk favorit, list pakai [], set pakai{} agar tidak ada duplikat
+  void toggleFavorite(){
+    //jika katanya yang sama sudah ada di favorit, maka hapus. jika belum, tambah
+    if (favorites.contains(current)) {
+      favorites.remove(current);
+    } else {
+      favorites.add(current);
+    }
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatelessWidget {
@@ -55,14 +67,30 @@ class MyHomePage extends StatelessWidget {
             //Text(pair.asLowerCase), //ambil status app class, yang current which is word pair nya.
           SizedBox(height: 20), //ngasih pemisah antara big card dan elevated button
         
-        
+
+          //nah kita mau buat tombol like juga didalam row yang sama dengan tombol next, sehingga eleveted button sebelumnya kita wrapped in a row.
         
             //button
-            ElevatedButton(
-              onPressed: (){
-                appState.getNext(); //memanggil getNext method di class appState.
-              },
-              child: Text('Next'),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(
+                  onPressed: (){
+                    appState.getNext(); //memanggil getNext method di class appState.
+                  },
+                  child: Text('Next'),
+                ),
+
+                SizedBox(width: 10),
+
+                ElevatedButton.icon(
+                  onPressed: (){
+                    appState.toggleFavorite();
+                    }, 
+                  icon: Icon(MyFlutterApp.heart),
+                  label: Text('Favorite'),
+                 ),
+              ],
             ),
           ],
         ),
