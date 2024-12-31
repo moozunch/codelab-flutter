@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart'; //
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'my_flutter_app_icons.dart';
 
@@ -64,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case 1:
         //Placeholder adalah widget yang menampilkan kotak abu-abu yang menunjukkan di mana widget lain akan ditempatkan. pengganti sementara saja.
-        page = Placeholder();
+        page = FavoritesPage(); //yang dipanggil pun class, makanya kalau kita pakai .dart baru juga yang kita pnaggil kan class
         break;
       default: 
         throw UnimplementedError(('no widget for $selectedIndex'));
@@ -76,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Row(
           children: [
             SafeArea(child: NavigationRail(
-              extended: constraints.maxWidth >= 600, //jika ada ruang lebar lebih dari 600 maka akan ditampikan juga teks label nya atau di extended.
+              extended: constraints.maxWidth >= 600, //jika ada ruang lebar lebih dari 600 maka akan ditampikan juga teks label nya atau di extended. Bisa ngecek constraints ini juga dari LayoutBuilder
               destinations: [
                 NavigationRailDestination(
                   icon: Icon(MyFlutterApp.home),
@@ -180,5 +179,33 @@ class bigCard extends StatelessWidget {
         ),       
        ),    
     ); //
+  }
+}
+
+class FavoritesPage extends StatelessWidget {
+  @override
+  
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    var words = appState.favorites;
+
+    if (appState.favorites.isEmpty) {
+      return Center(child: Text('No favorites yet.'),
+      );
+    }
+
+    return ListView(
+      children: [
+        Padding(padding: const EdgeInsets.all(20),
+         child: Text('You have '
+                      '${appState.favorites.length} favorites: ' ),
+        ), 
+          for (var fav in words)
+            ListTile(
+              leading: Icon(MyFlutterApp.heart),
+              title: Text(fav.asLowerCase),
+            ),
+      ],
+    );
   }
 }
